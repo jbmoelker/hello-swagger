@@ -1,0 +1,45 @@
+{
+  "name": "hello-swagger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rimraf dist/ && mkdirp dist/",
+    "build": "run-s build:*",
+    "build:editor": "ncp node_modules/swagger-editor-dist/ dist/editor/",
+    "build:index": "ncp index.html dist/editor/index.html",
+    "build:schema": "ncp schema.yaml dist/editor/schema.yaml",
+    "preeditor": "npm run build",
+    "editor": "http-server './dist/editor/' -c-1 -o -p 7924",
+    "dev": "micro-dev $npm_package_main",
+    "start": "micro $npm_package_main",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbmoelker/hello-swagger.git"
+  },
+  "keywords": [],
+  "author": "Jasper Moelker <jasper@voorhoede.nl> (https://voorhoede.nl/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jbmoelker/hello-swagger/issues"
+  },
+  "homepage": "https://github.com/jbmoelker/hello-swagger#readme",
+  "dependencies": {
+    "content-type": "1.0.4",
+    "micro": "9.0.1",
+    "swagger-editor-dist": "3.1.14",
+    "swagger-parameters": "1.3.1",
+    "swagger-parser": "4.0.1",
+    "tv4": "1.3.0"
+  },
+  "devDependencies": {
+    "http-server": "0.10.0",
+    "micro-dev": "1.4.0",
+    "mkdirp": "0.5.1",
+    "ncp": "2.0.0",
+    "npm-run-all": "4.1.2",
+    "rimraf": "2.6.2"
+  }
+}

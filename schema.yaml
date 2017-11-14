@@ -1,0 +1,44 @@
+swagger: '2.0'
+info:
+  title: Hello Swagger
+  description: Experiment to validate a zeit/micro service with Swagger schema.
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /:
+    get:
+      summary: Greeting
+      description: ...
+      parameters:
+        - name: name
+          in: query
+          description: ...
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Personal greeting
+          schema:
+            type: object
+            properties:
+              hello:
+                type: string
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Error:
+    type: array
+    items:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          description: HTTP Status code
+        message:
+          type: string
+          description: Human-readable description of the error.
