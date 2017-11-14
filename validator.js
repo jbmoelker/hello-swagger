@@ -6,6 +6,8 @@ const { send } = require('micro')
 const SwaggerParser = require('swagger-parser')
 const tv4 = require('tv4')
 
+const isProduction = (process.env.NODE_ENV === 'production')
+
 
 function validate (filename, service) {
     return async (req, res) => {
@@ -43,6 +45,11 @@ function InvalidParameterError (errors) {
     this.errors = errors // @todo format errors
 }
 
+function InvalidProtocolError (protocol, allowedProtocols) {
+    this.statusCode = 403
+    this.message = `Protocol ${protocol} not allowed. Allowed protocols: ${allowedProtocols.join(', ')}.`
+}
+
 async function validateRequest (schema, req) {
     validateRequestScheme(schema, req)
 
@@ -58,9 +65,16 @@ async function validateRequest (schema, req) {
     return schemaForRequest
 }
 
+/**
+ * @todo also account for req.headers['x-forwarded-proto'] ? (https://stackoverflow.com/a/42358516)
+ */
 function validateRequestScheme (schema, req) {
+    const { host } = req.headers
+    const scheme = req.connection.encrypted ? 'https' : 'http'
     const supportedSchemes = schema.schemes
-    // @todo validate scheme
+    if (!supportedSchemes.includes(scheme) && isProduction) {
+        throw new InvalidProtocolError(scheme, supportedSchemes)
+    }
 }
 
 /**
